@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>SnakeGame</title>
+    </head>
+    <body>
+        <canvas id="stage" width="400px" height="400px"></canvas>
+        <script>
+        window.onload=function(){
+            //pegando o canvas
+            const stage= document.getElementById('stage');
+            console.log(stage);
+            //setando conteudo do canvas como '2d'
+            const ctx=stage.getContext('2d');   
+
+            //disparar function no evento de soltar tecla
+            document.addEventListener("keydown",keyPush);
+            // função que carrega outra função a cade X tempo, no caso 60 milesegundos  
+            setInterval(game,100/15);
+            
+            /*constante que vai carregar quantas casinhas(velocidade) a snake vai andar a cada atualização 
+            da function game*/
+
+            const vel=1;
+
+            //velocidade inicial v=0 e ponto inicial p=10
+
+            var vx = vy= 0;
+            var px = py=10;
+
+            //tamanho de um quadrado (comida cobra)
+            const tp=20;
+
+            //quantidade de casa do stage
+            var qp=20;
+
+            //localização inicial da maça
+            var ax=ay=15;
+
+            //rastro da cobra
+
+            var trail= [];
+            //inicialmente com 5 casinhas
+            tail=5;
+
+            //função que vai ser o jogo, carregada a cada minuto pela setInterval
+            function game(){
+            //a posição inicial da cobra é verificada quanto ela mesma mais sua velocidade
+                px+=vx;
+                py+=vy;
+                //caso as posições cheguem no seu limite (borda do stage), jogar para o outro lado
+                if(px<0){
+                    px=qp-1;
+                }
+                if(px>qp-1){
+                    px=0;
+                }
+                if(py<0){
+                    py=qp-1;
+                }
+                if(py>qp-1){
+                    py=0;
+                }
+                //pitando fundo
+                ctx.fillStyle = "black";
+                ctx.fillRect(0,0, stage.width, stage.height);
+                //pintando maça
+                ctx.fillStyle= "red";
+                ctx.fillRect(ax*tp,ay*tp, tp, tp);
+
+                //pintando snake
+                ctx.fillStyle="lime";
+                for (let i = 0; i < trail.length; i++) {
+                    ctx.fillRect(trail[i].x*tp,trail[i].y*tp,tp,tp);
+                    if(trail[i].x==px && trail[i].y==py){
+                        vx=vy=0;
+                        tail=5;
+                    }
+                }
+                    trail.push({
+                        x:px,   
+                        y:py
+                    })
+                    while(trail.length>tail){
+                        trail.shift();
+                    }
+                    if(ax==px && ay==py){
+                        tail++;
+                        ax = Math.floor(Math.random()*qp);
+                        ay = Math.floor(Math.random()*qp);
+                    }   
+            }
+            function keyPush(ev){
+                         switch (ev.keyCode) {
+                            case 37: //left
+                                vx=-vel;
+                                vy=0;
+                                console.log("reconhecido");
+                                break;
+                            case 38: //up
+                                vx=0;
+                                vy=-vel;
+                            break; //right
+                            case 39:
+                                vx=vel;
+                                vy=0;
+                            break;
+                            case 40: //down
+                                vx=0;
+                                vy=vel;
+                            break;
+                }
+            }
+            
+            
+            
+
+
+
+
+        }
+
+        </script>
+    </body>
+</html>
